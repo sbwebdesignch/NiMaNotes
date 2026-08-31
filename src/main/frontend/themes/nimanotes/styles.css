@@ -1,0 +1,101 @@
+:root {
+  --lumo-primary-color: #4f6df5;
+  --lumo-primary-color-50pct: rgba(79, 109, 245, 0.5);
+  --lumo-primary-color-10pct: rgba(79, 109, 245, 0.12);
+  --lumo-primary-text-color: #3d54c4;
+  --lumo-border-radius-m: 10px;
+  --lumo-border-radius-l: 14px;
+  --lumo-font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: linear-gradient(160deg, #eef1fb 0%, #f7f8fc 100%);
+}
+
+/* Login / Register */
+.auth-view {
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card {
+  background: #ffffff;
+  border-radius: var(--lumo-border-radius-l);
+  box-shadow: 0 10px 30px rgba(30, 41, 59, 0.08);
+  padding: var(--lumo-space-xl) var(--lumo-space-l);
+  width: min(360px, 90vw);
+  gap: var(--lumo-space-s);
+}
+
+.auth-card h1 {
+  font-size: 1.4rem;
+  margin: 0 0 var(--lumo-space-m) 0;
+  text-align: center;
+  color: var(--lumo-header-text-color);
+}
+
+.auth-card vaadin-text-field,
+.auth-card vaadin-password-field {
+  width: 100%;
+}
+
+.auth-card vaadin-button {
+  width: 100%;
+  margin-top: var(--lumo-space-s);
+}
+
+.auth-card .auth-link {
+  margin-top: var(--lumo-space-m);
+  text-align: center;
+}
+
+/* Main / Notes view */
+.app-view {
+  min-height: 100vh;
+  box-sizing: border-box;
+  max-width: 960px;
+  width: 100%;
+  margin: 0 auto;
+  padding: var(--lumo-space-l);
+  gap: var(--lumo-space-m);
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.app-header h2 {
+  margin: 0;
+  color: var(--lumo-header-text-color);
+}
+
+.notes-card {
+  background: #ffffff;
+  border-radius: var(--lumo-border-radius-l);
+  box-shadow: 0 6px 20px rgba(30, 41, 59, 0.06);
+  padding: var(--lumo-space-l);
+  width: 100%;
+  box-sizing: border-box;
+  gap: var(--lumo-space-s);
+}
+
+.notes-card vaadin-text-field,
+.notes-card vaadin-text-area {
+  width: 100%;
+}
+
+.app-toolbar vaadin-button {
+  min-width: 110px;
+}
+
+.notes-card vaadin-grid {
+  border-radius: var(--lumo-border-radius-m);
+  overflow: hidden;
+}

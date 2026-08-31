@@ -1,48 +1,76 @@
 package com.nimanotes.ui;
 
-import com.nimanotes.model.User;
-import com.nimanotes.repository.UserRepository;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.vaadin.flow.server.VaadinServletRequest;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 @Route("login")
+@AnonymousAllowed
 public class LoginView extends VerticalLayout {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
-    public LoginView(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+    public LoginView(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+
+        setSizeFull();
+        addClassName("auth-view");
+        setAlignItems(FlexComponent.Alignment.CENTER);
+        setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
 
         H1 title = new H1("NiMaNotes Login");
         TextField usernameField = new TextField("Benutzername");
         PasswordField passwordField = new PasswordField("Passwort");
         Button loginButton = new Button("Einloggen");
+        loginButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button registerButton = new Button("Konto erstellen");
+        registerButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         loginButton.addClickListener(event -> {
             String username = usernameField.getValue();
             String password = passwordField.getValue();
-            User user = userRepository.findByUsername(username).orElse(null);
 
-            if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-                Notification.show("Login erfolgreich");
+            try {
+                Authentication authenticated = authenticationManager.authenticate(
+                    UsernamePasswordAuthenticationToken.unauthenticated(username, password));
+
+                SecurityContext context = SecurityContextHolder.createEmptyContext();
+                context.setAuthentication(authenticated);
+                SecurityContextHolder.setContext(context);
+
+                VaadinServletRequest.getCurrent().getHttpServletRequest()
+                    .getSession(true)
+                    .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+
                 UI.getCurrent().navigate("");
-            } else {
+            } catch (AuthenticationException e) {
                 Notification.show("Login fehlgeschlagen");
             }
         });
 
         registerButton.addClickListener(event -> UI.getCurrent().navigate("register"));
 
-        add(title, usernameField, passwordField, loginButton, registerButton);
+        VerticalLayout card = new VerticalLayout(title, usernameField, passwordField, loginButton, registerButton);
+        card.addClassName("auth-card");
+        card.setPadding(false);
+        card.setSpacing(true);
+
+        add(card);
     }
 }

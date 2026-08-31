@@ -4,15 +4,19 @@ import com.nimanotes.model.User;
 import com.nimanotes.repository.UserRepository;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Route("register")
+@AnonymousAllowed
 public class RegisterView extends VerticalLayout {
 
     private final UserRepository userRepository;
@@ -22,11 +26,18 @@ public class RegisterView extends VerticalLayout {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
 
+        setSizeFull();
+        addClassName("auth-view");
+        setAlignItems(FlexComponent.Alignment.CENTER);
+        setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+
         H1 title = new H1("Konto erstellen");
         TextField usernameField = new TextField("Benutzername");
         PasswordField passwordField = new PasswordField("Passwort");
         Button registerButton = new Button("Konto anlegen");
+        registerButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         Button backButton = new Button("Zum Login");
+        backButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         registerButton.addClickListener(event -> {
             String username = usernameField.getValue();
@@ -50,6 +61,11 @@ public class RegisterView extends VerticalLayout {
 
         backButton.addClickListener(event -> UI.getCurrent().navigate("login"));
 
-        add(title, usernameField, passwordField, registerButton, backButton);
+        VerticalLayout card = new VerticalLayout(title, usernameField, passwordField, registerButton, backButton);
+        card.addClassName("auth-card");
+        card.setPadding(false);
+        card.setSpacing(true);
+
+        add(card);
     }
 }

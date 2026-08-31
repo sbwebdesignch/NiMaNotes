@@ -5,19 +5,23 @@ import com.nimanotes.model.User;
 import com.nimanotes.repository.NoteRepository;
 import com.nimanotes.repository.UserRepository;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import jakarta.annotation.security.PermitAll;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
 @Route("")
+@PermitAll
 public class MainView extends VerticalLayout {
 
     private final NoteRepository noteRepository;
@@ -36,11 +40,18 @@ public class MainView extends VerticalLayout {
         this.noteRepository = noteRepository;
         this.userRepository = userRepository;
 
-        setSizeFull();
-        setPadding(true);
+        addClassName("app-view");
+        setPadding(false);
         setSpacing(true);
+        setAlignItems(Alignment.STRETCH);
 
         H2 title = new H2("NiMaNotes");
+        HorizontalLayout header = new HorizontalLayout(title);
+        header.addClassName("app-header");
+
+        saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+        deleteButton.addThemeVariants(ButtonVariant.LUMO_ERROR, ButtonVariant.LUMO_TERTIARY);
+        clearButton.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
 
         noteGrid.addColumn(Note::getTitle).setHeader("Titel");
         noteGrid.addColumn(Note::getContent).setHeader("Inhalt");
@@ -59,7 +70,14 @@ public class MainView extends VerticalLayout {
         deleteButton.addClickListener(event -> deleteSelectedNote());
 
         HorizontalLayout toolbar = new HorizontalLayout(saveButton, clearButton, deleteButton);
-        add(title, titleField, contentArea, toolbar, noteGrid);
+        toolbar.addClassName("app-toolbar");
+
+        VerticalLayout card = new VerticalLayout(titleField, contentArea, toolbar, noteGrid);
+        card.addClassName("notes-card");
+        card.setPadding(false);
+        card.setSpacing(true);
+
+        add(header, card);
         loadNotes();
     }
 
