@@ -12,6 +12,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+// Ergänzender Integrationstes (kein Whitebox-Kategorietest).
 @DataJpaTest
 class NoteRepositoryTest {
 

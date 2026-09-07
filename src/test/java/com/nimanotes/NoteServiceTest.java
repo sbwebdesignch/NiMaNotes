@@ -17,9 +17,10 @@ class NoteServiceTest {
 
     @Test
     void nonPremiumUnderLimitCanCreate() {
-        User user = new User("u", "p");
-        List<Note> notes = List.of(new Note(), new Note()); // 2 von 5
-        assertThat(noteService.canCreateNote(user, notes, false)).isTrue();
+        User user = new User("u", "p"); // Arrange: Vorbereitung
+        List<Note> notes = List.of(new Note(), new Note()); // Testdaten aufbauen
+        assertThat(noteService.canCreateNote(user, notes, false)).isTrue(); // Act & Assert: Aufruf der Methode und
+                                                                            // Überprüfung des Ergebnisses
     }
 
     @Test
@@ -47,31 +48,5 @@ class NoteServiceTest {
         List<Note> notes = List.of(new Note());
         assertThat(noteService.canCreateNote(null, notes, false)).isFalse();
         assertThat(noteService.canCreateNote(null, notes, true)).isFalse();
-    }
-
-    // ---- Sammlungen & Listen ----
-
-    @Test
-    void collectionsFilterByKeyword() {
-        User user = new User("u", "p");
-        Note a = new Note("hello", "world", user);
-        Note b = new Note("foo", "bar", user);
-        List<Note> filtered = noteService.filterByKeyword(List.of(a, b), "hello");
-        assertThat(filtered).hasSize(1).contains(a);
-    }
-
-    @Test
-    void collectionsFilterByKeywordNoMatchReturnsEmptyList() {
-        User user = new User("u", "p");
-        Note a = new Note("hello", "world", user);
-        List<Note> filtered = noteService.filterByKeyword(List.of(a), "xyz");
-        assertThat(filtered).isEmpty();
-    }
-
-    @Test
-    void collectionsFilterByKeywordNullInputsReturnEmptyList() {
-        assertThat(noteService.filterByKeyword(null, "x")).isEmpty();
-        User user = new User("u", "p");
-        assertThat(noteService.filterByKeyword(List.of(new Note("a", "b", user)), null)).isEmpty();
     }
 }

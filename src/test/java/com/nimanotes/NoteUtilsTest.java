@@ -12,8 +12,8 @@ class NoteUtilsTest {
 
     @Test
     void titleLengthLowerBoundary() {
-        assertThat(NoteUtils.isTitleLengthValid("ab")).isFalse();  // n-1 (2)
-        assertThat(NoteUtils.isTitleLengthValid("abc")).isTrue();  // n   (3)
+        assertThat(NoteUtils.isTitleLengthValid("ab")).isFalse(); // n-1 (2)
+        assertThat(NoteUtils.isTitleLengthValid("abc")).isTrue(); // n (3)
         assertThat(NoteUtils.isTitleLengthValid("abcd")).isTrue(); // n+1 (4)
     }
 
@@ -23,8 +23,8 @@ class NoteUtilsTest {
         String len100 = "a".repeat(100);
         String len101 = "a".repeat(101);
 
-        assertThat(NoteUtils.isTitleLengthValid(len99)).isTrue();   // n-1
-        assertThat(NoteUtils.isTitleLengthValid(len100)).isTrue();  // n
+        assertThat(NoteUtils.isTitleLengthValid(len99)).isTrue(); // n-1
+        assertThat(NoteUtils.isTitleLengthValid(len100)).isTrue(); // n
         assertThat(NoteUtils.isTitleLengthValid(len101)).isFalse(); // n+1
     }
 
@@ -44,7 +44,8 @@ class NoteUtilsTest {
     @Test
     void computeRatioOutsideToleranceFailsAssertion() {
         double value = NoteUtils.computeRatio(1.0, 3.0); // 0.3333...
-        // Negativtest: bewusst falscher Erwartungswert liegt klar ausserhalb der Toleranz
+        // Negativtest: bewusst falscher Erwartungswert liegt klar ausserhalb der
+        // Toleranz
         assertThat(value).isNotCloseTo(0.5, org.assertj.core.data.Offset.offset(0.001));
     }
 
@@ -52,6 +53,12 @@ class NoteUtilsTest {
     void computeRatioNegativeNumbers() {
         double value = NoteUtils.computeRatio(-10.0, 4.0);
         assertThat(value).isCloseTo(-2.5, org.assertj.core.data.Offset.offset(0.001));
+    }
+
+    @Test
+    void computeRatioDivisionByZeroThrows() {
+        // Negativtest: Nenner 0 liegt ausserhalb jedes gueltigen Toleranzbereichs.
+        assertThatThrownBy(() -> NoteUtils.computeRatio(1.0, 0.0)).isInstanceOf(IllegalArgumentException.class);
     }
 
     // ---- Format & Muster (Regex) ----
@@ -76,12 +83,5 @@ class NoteUtilsTest {
     @Test
     void matchesPatternNullInputIsFalse() {
         assertThat(NoteUtils.matchesPattern(null, "^[a-z]+$")).isFalse();
-    }
-
-    // ---- Fehlerbehandlung & Edge Cases ----
-
-    @Test
-    void divisionByZeroThrows() {
-        assertThatThrownBy(() -> NoteUtils.computeRatio(1.0, 0.0)).isInstanceOf(IllegalArgumentException.class);
     }
 }

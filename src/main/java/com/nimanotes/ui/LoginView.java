@@ -1,5 +1,8 @@
 package com.nimanotes.ui;
 
+import com.nimanotes.model.LoginSession;
+import com.nimanotes.repository.LoginSessionRepository;
+import com.nimanotes.repository.UserRepository;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -20,14 +23,21 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
+import java.util.UUID;
+
 @Route("login")
 @AnonymousAllowed
 public class LoginView extends VerticalLayout {
 
     private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final LoginSessionRepository loginSessionRepository;
 
-    public LoginView(AuthenticationManager authenticationManager) {
+    public LoginView(AuthenticationManager authenticationManager, UserRepository userRepository,
+            LoginSessionRepository loginSessionRepository) {
         this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.loginSessionRepository = loginSessionRepository;
 
         setSizeFull();
         addClassName("auth-view");
@@ -57,6 +67,11 @@ public class LoginView extends VerticalLayout {
                 VaadinServletRequest.getCurrent().getHttpServletRequest()
                     .getSession(true)
                     .setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, context);
+
+                userRepository.findByUsername(username).ifPresent(user -> {
+                    LoginSession session = new LoginSession(UUID.randomUUID().toString(), user);
+                    loginSessionRepository.save(session);
+                });
 
                 UI.getCurrent().navigate("");
             } catch (AuthenticationException e) {

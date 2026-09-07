@@ -26,10 +26,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Auftrag 2 (Freier Wahl) - Faktor 3: kombiniert Time-Freezing (fixer Clock)
- * mit erweitertem Mocking (Aufrufreihenfolge-Verifikation + Exception-Simulation
- * an der Repository-Schnittstelle) an einer sicherheitsrelevanten Business-Regel:
- * automatisches Bereinigen abgelaufener Login-Sessions.
+ * Faktor 3: kombiniert Time-Freezing (fixer Clock)
  */
 @ExtendWith(MockitoExtension.class)
 class SessionCleanupServiceTest {
@@ -47,7 +44,7 @@ class SessionCleanupServiceTest {
         User user = new User("u", "p");
         LoginSession veryExpired = session(user, "2026-01-01T10:00:00Z"); // 2h alt -> abgelaufen
         LoginSession justExpired = session(user, "2026-01-01T11:20:00Z"); // 40min alt -> abgelaufen
-        LoginSession stillValid = session(user, "2026-01-01T11:50:00Z");  // 10min alt -> gültig
+        LoginSession stillValid = session(user, "2026-01-01T11:50:00Z"); // 10min alt -> gültig
 
         when(loginSessionRepository.findAll()).thenReturn(List.of(stillValid, veryExpired, justExpired));
 
@@ -57,7 +54,6 @@ class SessionCleanupServiceTest {
         assertThat(deleted).isEqualTo(2);
         verify(loginSessionRepository, never()).delete(stillValid);
 
-        // Erweitertes Mocking: Aufrufreihenfolge prüfen - älteste abgelaufene Session zuerst löschen
         InOrder inOrder = inOrder(loginSessionRepository);
         inOrder.verify(loginSessionRepository).delete(veryExpired);
         inOrder.verify(loginSessionRepository).delete(justExpired);
@@ -83,13 +79,11 @@ class SessionCleanupServiceTest {
         LoginSession normal = session(user, "2026-01-01T09:30:00Z");
         when(loginSessionRepository.findAll()).thenReturn(List.of(broken, normal));
 
-        // Exception-Simulation an der Schnittstelle: Löschen der ersten (defekten) Session schlägt fehl
         doThrow(new RuntimeException("DB constraint violation")).when(loginSessionRepository).delete(broken);
 
         SessionCleanupService service = new SessionCleanupService(loginSessionRepository, loginSessionService);
         int deleted = service.purgeExpiredSessions(fixedClock, ttl);
 
-        // Die zweite, ebenfalls abgelaufene Session muss trotz Fehler bei der ersten gelöscht werden
         assertThat(deleted).isEqualTo(1);
         verify(loginSessionRepository).delete(normal);
     }

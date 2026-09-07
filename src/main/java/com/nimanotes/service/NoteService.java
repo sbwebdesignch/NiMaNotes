@@ -5,7 +5,6 @@ import com.nimanotes.model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class NoteService {
@@ -16,12 +15,5 @@ public class NoteService {
         if (currentNotes == null) return true;
         if (isPremium) return true;
         return currentNotes.size() < DEFAULT_LIMIT;
-    }
-
-    public List<Note> filterByKeyword(List<Note> notes, String keyword) {
-        if (notes == null || keyword == null) return List.of();
-        return notes.stream()
-            .filter(n -> n.getTitle().contains(keyword) || n.getContent().contains(keyword))
-            .collect(Collectors.toList());
     }
 }

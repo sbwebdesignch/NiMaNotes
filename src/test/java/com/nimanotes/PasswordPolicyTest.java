@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Auftrag 3b - TDD: Diese Tests wurden gemäss TDD_Design_PasswordPolicy.md
+ * TDD: Diese Tests wurden gemäss TDD_Design_PasswordPolicy.md
  * VOR der Implementierung von PasswordPolicy geschrieben.
  */
 class PasswordPolicyTest {
@@ -57,9 +57,8 @@ class PasswordPolicyTest {
     }
 
     @Test
-    @Disabled("FEHLER-001 (offen, siehe M450_LB1_Unittest_Fehler.xlsx): "
-            + "containsSpecialChar() akzeptiert faelschlicherweise ein Leerzeichen "
-            + "als Sonderzeichen. Zum Reproduzieren @Disabled entfernen.")
+    @Disabled("FEHLER-001 (offen): containsSpecialChar() akzeptiert faelschlicherweise "
+            + "ein Leerzeichen als Sonderzeichen. Zum Reproduzieren @Disabled entfernen.")
     void whitespaceIsNotAcceptedAsSpecialChar() {
         // "Abc12345 " erfuellt Laenge/Gross-/Kleinbuchstabe/Ziffer, hat aber nur
         // ein Leerzeichen statt eines echten Sonderzeichens -> muss ungueltig sein.

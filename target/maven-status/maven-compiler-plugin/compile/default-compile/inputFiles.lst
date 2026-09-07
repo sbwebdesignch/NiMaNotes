@@ -8,6 +8,7 @@ C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\repository\NoteReposito
 C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\repository\UserRepository.java
 C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\service\LoginSessionService.java
 C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\service\NoteService.java
+C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\service\SessionCleanupScheduler.java
 C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\service\SessionCleanupService.java
 C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\service\UserDetailsServiceImpl.java
 C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\ui\LoginView.java
@@ -15,4 +16,3 @@ C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\ui\MainView.java
 C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\ui\RegisterView.java
 C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\util\NoteUtils.java
 C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\util\PasswordPolicy.java
-C:\Users\N. Seiler\NiMaNotes\src\main\java\com\nimanotes\util\TruncateUtil.java

@@ -2,6 +2,7 @@ package com.nimanotes.ui;
 
 import com.nimanotes.model.User;
 import com.nimanotes.repository.UserRepository;
+import com.nimanotes.util.PasswordPolicy;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -14,6 +15,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 @Route("register")
 @AnonymousAllowed
@@ -45,6 +48,12 @@ public class RegisterView extends VerticalLayout {
 
             if (username == null || username.isBlank() || password == null || password.isBlank()) {
                 Notification.show("Bitte alle Felder füllen");
+                return;
+            }
+
+            List<String> passwordViolations = PasswordPolicy.getViolations(password);
+            if (!passwordViolations.isEmpty()) {
+                Notification.show("Passwort zu schwach: " + String.join("; ", passwordViolations));
                 return;
             }
 
