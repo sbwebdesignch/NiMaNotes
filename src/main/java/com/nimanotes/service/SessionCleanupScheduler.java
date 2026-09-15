@@ -9,7 +9,7 @@ import java.time.Duration;
 @Component
 public class SessionCleanupScheduler {
 
-    private static final Duration SESSION_TTL = Duration.ofMinutes(60);
+    private static final Duration SESSION_TTL = Duration.ofMinutes(90);
 
     private final SessionCleanupService sessionCleanupService;
 

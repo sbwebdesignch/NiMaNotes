@@ -46,9 +46,7 @@ class SessionCleanupServiceTest {
         LoginSession justExpired = session(user, "2026-01-01T11:20:00Z"); // 40min alt -> abgelaufen
         LoginSession stillValid = session(user, "2026-01-01T11:50:00Z"); // 10min alt -> gültig
 
-        // Bewusst NICHT chronologisch zurueckgegeben: nur wenn purgeExpiredSessions
-        // selbst nach createdAt sortiert, werden die Loeschungen in der erwarteten
-        // Reihenfolge (aelteste zuerst) ausgefuehrt.
+    
         when(loginSessionRepository.findAll()).thenReturn(List.of(stillValid, justExpired, veryExpired));
 
         SessionCleanupService service = new SessionCleanupService(loginSessionRepository, loginSessionService);
